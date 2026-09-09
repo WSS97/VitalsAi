@@ -32,4 +32,7 @@ export interface BiomarkerReading {
   created_at: string;
 }
 
+console.log('URL do Supabase:', import.meta.env.VITE_SUPABASE_URL);
+console.log('Chave Anon do Supabase:', import.meta.env.VITE_SUPABASE_ANON_KEY)
+
 export type BiomarkerInput = Omit<BiomarkerReading, 'id' | 'created_at'>;
