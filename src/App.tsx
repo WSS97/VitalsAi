@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Activity, BarChart3, HeartPulse } from 'lucide-react';
-import { supabase, type BiomarkerReading, type BiomarkerInput } from './lib/supabase';
+import { supabase, type BiomarkerReading, type BiomarkerInput } from '@/lib/supabase';
 import { analyzeReading, type AnalysisResult } from '@/lib/analysis';
 import { fetchGroqAnalysis } from '@/lib/groq';
 import { BiomarkerForm } from '@/components/BiomarkerForm';
@@ -8,6 +8,15 @@ import { AIReport } from '@/components/AIReport';
 import { StatCards } from '@/components/StatCards';
 import { ReadingHistory } from '@/components/ReadingHistory';
 import { TrendChart } from '@/components/TrendChart';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+});
 
 function App() {
   const [readings, setReadings] = useState<BiomarkerReading[]>([]);
