@@ -65,6 +65,7 @@ ${biomarkerText}
 
 Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigatoriamente os campos "analysis", "recommendations", "nextSteps" e "warning".`;
 
+    // Chamada à API Groq com modelo atualizado
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -72,7 +73,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
         Authorization: `Bearer ${groqApiKey}`,
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
+        model: "llama-3.3-70b-versatile", // Modelo ativo recomendado
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -87,7 +88,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
       const errText = await response.text();
       return new Response(
         JSON.stringify({ error: `Erro na API Groq: ${response.status}`, detail: errText }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -97,7 +98,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
     if (!content) {
       return new Response(
         JSON.stringify({ error: "Resposta vazia da API Groq." }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -107,7 +108,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
     } catch {
       return new Response(
         JSON.stringify({ error: "Falha ao analisar a resposta JSON da IA.", raw: content }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -115,7 +116,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
       JSON.stringify(parsed),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
-  } catch (err) {
+  } catch (err: any) {
     return new Response(
       JSON.stringify({ error: err.message || "Erro interno do servidor." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
