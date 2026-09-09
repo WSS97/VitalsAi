@@ -4,10 +4,20 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Atenção: Variáveis VITE_SUPABASE_URL ou VITE_SUPABASE_ANON_KEY estão ausentes!');
+  throw new Error('Supabase URL ou Anon Key estão ausentes!');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl || '',
+  supabaseAnonKey || '',
+  {
+    global: {
+      headers: {
+        // Força a inclusão da chave de API em todas as chamadas HTTP
+        apikey: supabaseAnonKey || '',
+      },
+    },
+  }
+);
 
 export interface BiomarkerReading {
   id: string;
