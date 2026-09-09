@@ -73,7 +73,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
         Authorization: `Bearer ${groqApiKey}`,
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant", // Modelo ativo recomendado
+        model: "groq/compound", // Modelo ativo recomendado
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
