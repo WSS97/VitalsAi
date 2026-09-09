@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Debug temporário:
+console.log('--- DEBUG SUPABASE ---');
+console.log('URL carregada:', supabaseUrl ? 'Sim' : 'NÃO (Vazia)');
+console.log('Tamanho da Anon Key:', supabaseAnonKey.length);
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Supabase URL ou Anon Key estão ausentes!');
@@ -31,8 +36,5 @@ export interface BiomarkerReading {
   notes: string;
   created_at: string;
 }
-
-console.log('URL do Supabase:', import.meta.env.VITE_SUPABASE_URL);
-console.log('Chave Anon do Supabase:', import.meta.env.VITE_SUPABASE_ANON_KEY)
 
 export type BiomarkerInput = Omit<BiomarkerReading, 'id' | 'created_at'>;
