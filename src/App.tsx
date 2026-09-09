@@ -68,9 +68,12 @@ function App() {
         ...localResult,
         overallScore: Math.max(0, Math.min(100, Math.round(aiResult.overallScore))),
         riskLevel: aiResult.riskLevel,
-        insights: aiResult.insights,
+        analysis: aiResult.analysis,
         recommendations: aiResult.recommendations,
+        nextSteps: aiResult.nextSteps,
+        insights: aiResult.insights,
         summary: aiResult.summary,
+        warning: aiResult.warning,
       });
     } catch {
       setAnalysis(createLocalAnalysis(newReading, previous));
@@ -102,9 +105,12 @@ function App() {
         ...localResult,
         overallScore: Math.max(0, Math.min(100, Math.round(aiResult.overallScore))),
         riskLevel: aiResult.riskLevel,
-        insights: aiResult.insights,
+        analysis: aiResult.analysis,
         recommendations: aiResult.recommendations,
+        nextSteps: aiResult.nextSteps,
+        insights: aiResult.insights,
         summary: aiResult.summary,
+        warning: aiResult.warning,
       });
     } catch {
       setAnalysis(createLocalAnalysis(reading, previous));

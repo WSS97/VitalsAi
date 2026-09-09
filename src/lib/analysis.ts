@@ -18,9 +18,12 @@ export interface AnalysisResult {
   metrics: MetricResult[];
   overallScore: number;
   riskLevel: string;
-  insights: string[];
+  analysis: string[];
   recommendations: string[];
+  nextSteps: string[];
+  insights: string[];
   summary: string;
+  warning: string;
   trends: { label: string; direction: 'up' | 'down' | 'stable'; change: number }[];
 }
 
@@ -244,7 +247,7 @@ export function analyzeReading(reading: BiomarkerReading, previous?: BiomarkerRe
     }
   }
 
-  return { metrics, overallScore, riskLevel, insights, recommendations, summary: '', trends };
+  return { metrics, overallScore, riskLevel, analysis: [], recommendations, nextSteps: [], insights, summary: '', warning: '', trends };
 }
 
 export const STATUS_COLORS: Record<Status, { bg: string; text: string; border: string; dot: string; label: string }> = {

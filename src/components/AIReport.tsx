@@ -1,4 +1,4 @@
-import { Sparkles, TrendingDown, TrendingUp, Minus, AlertTriangle, CheckCircle2, Lightbulb } from 'lucide-react';
+import { Sparkles, TrendingDown, TrendingUp, Minus, AlertTriangle, CheckCircle2, Lightbulb, ArrowRight, ShieldAlert } from 'lucide-react';
 import type { AnalysisResult } from '@/lib/analysis';
 import { ScoreGauge } from './ScoreGauge';
 import { MetricRangeBar } from './MetricRangeBar';
@@ -62,13 +62,32 @@ export function AIReport({ analysis, loading }: AIReportProps) {
         </div>
       </div>
 
+      {/* Summary */}
       {analysis.summary && (
         <div className="bg-sky-50 border border-sky-100 rounded-2xl p-5">
           <p className="text-sm leading-6 text-sky-900">{analysis.summary}</p>
         </div>
       )}
 
-      {/* Metrics */}
+      {/* Analysis of indicators */}
+      {analysis.analysis.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
+            <h3 className="text-base font-semibold text-slate-800">Análise dos Indicadores</h3>
+          </div>
+          <ul className="space-y-2.5">
+            {analysis.analysis.map((item, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-slate-600">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Metrics range bars */}
       {analysis.metrics.length > 0 && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
           <h3 className="text-base font-semibold text-slate-800 mb-4">Análise dos Biomarcadores</h3>
@@ -125,22 +144,49 @@ export function AIReport({ analysis, loading }: AIReportProps) {
       )}
 
       {/* Recommendations */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Lightbulb className="w-4 h-4 text-sky-500" />
-          <h3 className="text-base font-semibold text-slate-800">Recomendações da IA</h3>
+      {analysis.recommendations.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Lightbulb className="w-4 h-4 text-sky-500" />
+            <h3 className="text-base font-semibold text-slate-800">Recomendações de Hábitos Saudáveis</h3>
+          </div>
+          <ul className="space-y-3">
+            {analysis.recommendations.map((rec, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-slate-600">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+                {rec}
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="space-y-3">
-          {analysis.recommendations.map((rec, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-sm text-slate-600">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-              {rec}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 pt-4 border-t border-slate-100">
-          <p className="text-xs text-slate-400 italic">
-            Esta análise por IA tem finalidade exclusivamente informativa e não constitui aconselhamento médico. Consulte sempre um profissional de saúde qualificado.
+      )}
+
+      {/* Next Steps */}
+      {analysis.nextSteps.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <ArrowRight className="w-4 h-4 text-sky-500" />
+            <h3 className="text-base font-semibold text-slate-800">Próximos Passos Sugeridos</h3>
+          </div>
+          <ul className="space-y-3">
+            {analysis.nextSteps.map((step, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-slate-600">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-sky-100 text-sky-600 text-xs font-bold shrink-0 mt-0.5">
+                  {i + 1}
+                </span>
+                {step}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Warning */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+        <div className="flex items-start gap-2.5">
+          <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-sm leading-6 text-amber-800">
+            {analysis.warning || 'Esta análise por IA tem finalidade exclusivamente informativa e não constitui aconselhamento médico. Consulte sempre um profissional de saúde qualificado.'}
           </p>
         </div>
       </div>

@@ -3,9 +3,12 @@ import type { BiomarkerReading } from './supabase';
 export interface GroqAnalysisResult {
   overallScore: number;
   riskLevel: string;
-  insights: string[];
+  analysis: string[];
   recommendations: string[];
+  nextSteps: string[];
+  insights: string[];
   summary: string;
+  warning: string;
 }
 
 export async function fetchGroqAnalysis(
@@ -67,8 +70,11 @@ export async function fetchGroqAnalysis(
   return {
     overallScore: data.overallScore,
     riskLevel: data.riskLevel || 'Risco Moderado',
-    insights: Array.isArray(data.insights) ? data.insights : [],
+    analysis: Array.isArray(data.analysis) ? data.analysis : [],
     recommendations: Array.isArray(data.recommendations) ? data.recommendations : [],
+    nextSteps: Array.isArray(data.nextSteps) ? data.nextSteps : [],
+    insights: Array.isArray(data.insights) ? data.insights : [],
     summary: data.summary || '',
+    warning: data.warning || '',
   };
 }

@@ -44,32 +44,26 @@ Deno.serve(async (req: Request) => {
 
     const biomarkerText = formatBiomarkers(current, previous);
 
-    const systemPrompt = `Você é um analista de dados de saúde especializado em interpretar biomarcadores metabólicos e cardiovasculares. Sua função é analisar os dados biomarcadores fornecidos pelo usuário e gerar um relatório de saúde estruturado em português brasileiro (pt-BR).
-
-Diretrizes:
-1. Avalie cada biomarcador fornecido com base nas faixas de referência clínicas padrão.
-2. Calcule uma pontuação geral de saúde de 0 a 100, onde valores mais altos indicam melhor estado de saúde.
-3. Determine o nível de risco: "Baixo Risco", "Risco Moderado", "Risco Elevado" ou "Alto Risco".
-4. Gere insights clínicos relevantes destacando valores fora da faixa ideal.
-5. Forneça recomendações personalizadas e práticas em português.
-6. Se houver dados de leitura anterior, compare e identifique tendências.
-7. TODO o conteúdo deve ser escrito em português brasileiro (pt-BR).
+    const systemPrompt = `Você é um assistente de IA especialista em medicina preventiva e análise de dados biométricos. Com base nos marcadores de saúde fornecidos pelo usuário (glicemia, pressão arterial, colesterol, etc.), gere um relatório estruturado e personalizado. O relatório deve conter obrigatoriamente: 1) Uma análise direta se os indicadores estão nas faixas seguras ou de alerta, 2) Recomendações práticas e fundamentadas de hábitos saudáveis, 3) Próximos passos sugeridos. Responda estritamente em português brasileiro (pt-BR), utilizando formatação Markdown limpa, sem jargões excessivamente complexos e mantendo um tom encorajador e profissional. Nunca forneça diagnósticos médicos definitivos, sempre inclua um aviso para consultar um médico.
 
 Você DEVE responder APENAS com um objeto JSON válido, sem markdown, sem texto adicional, no seguinte formato exato:
 
 {
   "overallScore": <número inteiro 0-100>,
   "riskLevel": "<Baixo Risco | Risco Moderado | Risco Elevado | Alto Risco>",
-  "insights": ["<string>", ...],
-  "recommendations": ["<string>", ...],
-  "summary": "<string com resumo geral em português>"
+  "analysis": ["<string: análise direta de cada indicador, indicando se está em faixa segura ou de alerta>"],
+  "recommendations": ["<string: recomendações práticas e fundamentadas de hábitos saudáveis>"],
+  "nextSteps": ["<string: próximos passos sugeridos>"],
+  "insights": ["<string: insights clínicos relevantes>"],
+  "summary": "<string com resumo geral encorajador em português>",
+  "warning": "<string: aviso de que não é diagnóstico médico e que se deve consultar um médico>"
 }`;
 
     const userPrompt = `Analise os seguintes dados de biomarcadores e gere o relatório de saúde em português brasileiro (pt-BR):
 
 ${biomarkerText}
 
-Responda APENAS com o JSON estruturado conforme especificado.`;
+Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigatoriamente os campos "analysis", "recommendations", "nextSteps" e "warning".`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
