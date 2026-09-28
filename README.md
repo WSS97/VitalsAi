@@ -54,13 +54,15 @@ Para garantir consistência e segurança nas respostas da IA, a Edge Function in
     VITE_SUPABASE_ANON_KEY=sua-chave-anon-publica
     ```
 
-4.  **Configurar o Servidor (Edge Functions):**
+4.  **Ativar sessões anônimas:** no painel do Supabase, habilite `Anonymous Sign-Ins` nas configurações de autenticação e aplique as migrations (`supabase db push`). Cada navegador/dispositivo terá um histórico privado próprio; sem uma conta, esses históricos não são sincronizados entre dispositivos.
+
+5.  **Configurar o Servidor (Edge Functions):**
     No painel do Supabase, certifique-se de adicionar o segredo da sua API do Groq nas configurações de Function Secrets:
     ```env
     GROQ_API_KEY=gsk_sua_chave_secreta_do_groq
     ```
 
-5.  **Rodar em modo de desenvolvimento:**
+6.  **Rodar em modo de desenvolvimento:**
     ```bash
     npm run dev
     ```

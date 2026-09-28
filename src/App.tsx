@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Activity, BarChart3, HeartPulse } from 'lucide-react';
-import { supabase, type BiomarkerReading, type BiomarkerInput } from '@/lib/supabase';
+import { ensureAnonymousSession, supabase, type BiomarkerReading, type BiomarkerInput } from '@/lib/supabase';
 import { analyzeReading, type AnalysisResult } from '@/lib/analysis';
 import { fetchGroqAnalysis } from '@/lib/groq';
 import { BiomarkerForm } from '@/components/BiomarkerForm';
@@ -13,13 +13,12 @@ import { TrendChart } from '@/components/TrendChart';
 function App() {
   const [readings, setReadings] = useState<BiomarkerReading[]>([]);
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTrend, setActiveTrend] = useState<'glucose' | 'systolic' | 'total_cholesterol'>('glucose');
 
   const fetchReadings = useCallback(async () => {
-    setLoading(true);
     setError(null);
     const { data, error: fetchError } = await supabase
       .from('biomarker_readings')
@@ -31,11 +30,28 @@ function App() {
     } else if (data) {
       setReadings(data as BiomarkerReading[]);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
-    fetchReadings();
+    let cancelled = false;
+
+    const initialize = async () => {
+      try {
+        await ensureAnonymousSession();
+        if (cancelled) return;
+        setAuthReady(true);
+        await fetchReadings();
+      } catch {
+        if (!cancelled) {
+          setError('Não foi possível iniciar uma sessão privada. Habilite o acesso anônimo no Supabase e tente novamente.');
+        }
+      }
+    };
+
+    void initialize();
+    return () => {
+      cancelled = true;
+    };
   }, [fetchReadings]);
 
   const createLocalAnalysis = (reading: BiomarkerReading, previous?: BiomarkerReading) => {
@@ -201,7 +217,7 @@ function App() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
-          <div className="lg:col-span-2"><BiomarkerForm onSubmit={handleSubmit} loading={analyzing} /></div>
+          <div className="lg:col-span-2"><BiomarkerForm onSubmit={handleSubmit} loading={analyzing || !authReady} /></div>
           <div className="lg:col-span-3"><AIReport analysis={analysis} loading={analyzing} /></div>
         </div>
 

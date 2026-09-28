@@ -4,13 +4,20 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  global: {
-    headers: {
-      apikey: supabaseAnonKey,
-      Authorization: `Bearer ${supabaseAnonKey}`,
-    },
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
   },
 });
+
+export async function ensureAnonymousSession(): Promise<void> {
+  const { data, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  if (data.session) return;
+
+  const { error: signInError } = await supabase.auth.signInAnonymously();
+  if (signInError) throw signInError;
+}
 
 export interface BiomarkerReading {
   id: string;
