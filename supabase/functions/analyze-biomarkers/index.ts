@@ -79,7 +79,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
           { role: "user", content: userPrompt },
         ],
         temperature: 0.4,
-        max_tokens: 2048,
+        max_tokens: 4000,
         response_format: { type: "json_object" },
       }),
     });
