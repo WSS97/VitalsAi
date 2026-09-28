@@ -73,7 +73,7 @@ Responda APENAS com o JSON estruturado conforme especificado, incluindo obrigato
         Authorization: `Bearer ${groqApiKey}`,
       },
       body: JSON.stringify({
-        model: "groq/compound", // Modelo ativo recomendado
+        model: "openai/gpt-oss-20b", // Modelo ativo recomendado
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
